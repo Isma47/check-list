@@ -16,7 +16,7 @@ const divPadre = document.createElement('form');
 function agregarTareas() {
     cerrarAgregarTareas();
     agregarTarea.addEventListener('click', () => {
-       //Dentro contenedor se pone el input
+        //Dentro contenedor se pone el input
         divPadre.appendChild(inputDivPadre);
         //boton de agregar tarea
         divPadre.appendChild(btnDivPadre);
@@ -25,18 +25,18 @@ function agregarTareas() {
         //colocamos contenedor div padre dentro del html
         listaTareas.appendChild(divPadre);
 
-        
+
         //Agregar estilos
         //div padre esttilos
-        divPadre.classList.add('bg-blue-500', 'fixed', 'w-full', 'start-0', 'h-48', 'flex', 'flex-col', 'items-center', 'justify-center')
-        divPadre.id ='tareaIngresada';
+        divPadre.classList.add('bg-blue-500', 'fixed', 'w-full', 'start-0', 'h-52', 'flex', 'flex-col', 'items-center', 'justify-center')
+        divPadre.id = 'tareaIngresada';
 
         //Estilos al input
         inputDivPadre.classList.add('w-11/12', 'py-2');
         inputDivPadre.placeholder = 'Ingrese su proximo objetivo';
         inputDivPadre.type = 'text';
         inputDivPadre.name = 'objetivos'
-        
+
         //Estilos del boton 
         //boton enviar
         btnDivPadre.classList.add('bg-white', 'm-4', 'py-1', 'px-8');
@@ -48,6 +48,10 @@ function agregarTareas() {
         btnCerrarPadre.value = 'Cerrar';
         btnCerrarPadre.id = 'cerrarTareas';
         console.log(btnCerrarPadre);
+
+        if(agregarTarea){
+            console.log(agregarTarea);
+        }
     });
 
     recopilarTareas();
@@ -60,40 +64,71 @@ const tareasAlHacer = {
 }
 
 //Formulario y extracción de su información
-let contadorLista = 1
+let contadorLista = 1;
 function recopilarTareas() {
-    btnDivPadre.addEventListener('click', (e) =>{
-        agregarPagina();
+    btnDivPadre.addEventListener('click', () => {
 
         let valor = inputDivPadre.value
-        if(valor === '') {
-            return console.log('funciona');
+        let alertaVacio = document.createElement('P');
+
+        if (valor === '') {
+            alertaVacio.textContent = 'No has ingresado ningun objetivo';
+            divPadre.appendChild(alertaVacio);
+            alertaVacio.classList.add('bg-red-500', 'w-6/12', 'text-center', 'py-2');
+
+            btnDivPadre.addEventListener('click', () => {
+                if (alertaVacio.classList.contains('bg-red-500')) {
+                    alertaVacio.remove();
+                }
+            })
+
+            btnCerrarPadre.addEventListener('click', () => {
+                if (alertaVacio.classList.contains('bg-red-500')) {
+                    alertaVacio.remove();
+                }
+            })
+
+        
+            return;
         }
+
+        if (valor) {
+            console.log('temach')
+        }
+
         tareasAlHacer[`Tarea ${contadorLista}`] = valor;
         contadorLista++;
+        agregarPagina();
     })
 }
 
 //Al madar enviar quitar el anuncio de agregar tarea
 function cerrarAgregarTareas() {
     btnCerrarPadre.addEventListener('click', () => {
-        if(divPadre.classList.contains('bg-blue-500')) {
+        if (divPadre.classList.contains('bg-blue-500')) {
             divPadre.remove();
         }
-    }) 
+    })
 }
 
 //Colocar la informacion del objeto 
 
 function agregarPagina() {
     let contenidoHTML = '';
+    lista.classList.add('flex', 'flex-col', 'gap-5');
     for (let key in tareasAlHacer) {
-      if (tareasAlHacer.hasOwnProperty(key)) {
-        contenidoHTML += `<p>${key}: ${tareasAlHacer[key]}</p>`;
-      }
+        if (tareasAlHacer.hasOwnProperty(key)) {
+            contenidoHTML += `
+            <div class="flex items-center justify-between  w-full">
+                <div class="flex items-center gap-4"> 
+                    <div class="h-6 w-6 bg-blue-500 rounded-full"></div> 
+                    <p class="py-3 max-w-sm overflow-clip">${tareasAlHacer[key]}</p>
+                </div>
+                <div class="h-6 w-6 bg-red-500 rounded-full flex justify-center" id="quitarObjetivo">X</div>
+            </div>`
+        }
     }
 
     lista.innerHTML = contenidoHTML;
-    console.log(contenidoHTML);
+  
 }
-
